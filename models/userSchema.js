@@ -4,7 +4,7 @@ const validator = require("validator");
 // Create a schema for the user model. This will define what fields are required and their data types, as well as any validation rules we want to apply on them
 
 const userSchema = new mongoose.Schema({
-  firstname: {
+  name: {
     type: String,
     required: true,
     trim: true,
@@ -26,15 +26,7 @@ const userSchema = new mongoose.Schema({
     minlength: 10,
     maxlength: 10,
   },
-  gender: {
-    type: String,
-    required: true,
-  },
-  status: {
-    type: String,
-    enum: ["Active", "In-Active"],
-    default: "Active",
-  },
+
   datecreated: Date,
   dateUpdated: Date,
 });
