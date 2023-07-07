@@ -17,5 +17,8 @@
     "moment": "^2.29.4",
     "mongoose": "^7.3.1",
     "validator": "^13.9.0"
+  },
+  "engines": {
+    "node": ">=14.20.1"
   }
 }
