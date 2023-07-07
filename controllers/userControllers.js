@@ -34,7 +34,7 @@ exports.userpost = async (req, res) => {
   }
 };
 
-exports.getUsers = async (req, res) => {
+exports.getSearchUsers = async (req, res) => {
   const search = req.query.search || "";
   const status = req.query.status || "";
   const gender = req.query.gender || "";
@@ -75,6 +75,17 @@ exports.getUsers = async (req, res) => {
       },
       usersData,
     });
+  } catch (error) {
+    res.status(400).json(error);
+    console.log("catch block error");
+  }
+};
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    const usersData = await users.find();
+
+    res.status(200).json(usersData);
   } catch (error) {
     res.status(400).json(error);
     console.log("catch block error");
