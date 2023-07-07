@@ -1,5 +1,6 @@
 const users = require("../models/userSchema");
 const moment = require("moment");
+const BASE_URL = process.env.BASE_URL;
 
 exports.userpost = async (req, res) => {
   const { firstname, email, mobile, gender, status } = req.body;
