@@ -3,6 +3,7 @@ const router = new express.Router();
 const controllers = require("../controllers/userControllers");
 const firebaseControllers = require("../controllers/firebaseController");
 const productControllers = require("../controllers/productController");
+const cartControllers = require("../controllers/cartControllers");
 
 // routes
 
@@ -19,5 +20,12 @@ router.post("/addproduct", productControllers.addProduct);
 router.get("/getallproducts", productControllers.getProducts);
 router.delete("/deleteproduct/:id", productControllers.deleteProduct);
 router.put("/updateproduct/:id", productControllers.updateProduct);
+router.post("/addnewbatch/:productId", productControllers.addBatchToProduct);
+router.put(
+  "/products/:productId/batches/:batchId",
+  productControllers.updateBatchInProduct
+);
 
+router.get("/cart/:userId", cartControllers.getCart);
+router.post("/cart/:userId/add", cartControllers.addToCart);
 module.exports = router;

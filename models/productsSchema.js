@@ -8,6 +8,17 @@ const productsSchema = new mongoose.Schema({
   composition: { type: String, required: true },
   company: { type: String, required: true },
   packing: { type: String, required: true },
+  requireprescription: { type: Boolean, required: true },
+  mrp: { type: String, required: true },
+  price: { type: String, required: true },
+  batch: [
+    {
+      batchNumber: { type: String, required: false },
+      quantity: { type: Number, required: true },
+    },
+  ],
+  datecreated: Date,
+  dateUpdated: Date,
 });
 
 // model define

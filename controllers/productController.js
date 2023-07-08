@@ -13,8 +13,27 @@ exports.getProducts = async (req, res) => {
 };
 
 exports.addProduct = async (req, res) => {
-  const { name, composition, company, packing } = req.body;
-  if (!name || !composition || !company || !packing) {
+  const {
+    name,
+    composition,
+    company,
+    packing,
+    requireprescription,
+    mrp,
+    price,
+    batch,
+  } = req.body;
+  console.log("prescuotion", requireprescription);
+  if (
+    !name ||
+    !composition ||
+    !company ||
+    !packing ||
+    !requireprescription ||
+    !mrp ||
+    !price ||
+    !batch
+  ) {
     res.status(400).json({ error: "All Input is required" });
   }
 
@@ -29,6 +48,10 @@ exports.addProduct = async (req, res) => {
         composition,
         company,
         packing,
+        requireprescription,
+        mrp,
+        price,
+        batch,
         datecreated: dateCreate,
       });
 
@@ -37,36 +60,6 @@ exports.addProduct = async (req, res) => {
     }
   } catch (err) {
     res.status(400).send(err);
-  }
-};
-
-exports.userpost = async (req, res) => {
-  const { name, email, mobile } = req.body;
-
-  if (!name || !email || !mobile) {
-    res.status(400).json({ error: "All Input is required" });
-  }
-  try {
-    const preuser = await users.findOne({ email: email });
-    if (preuser) {
-      res
-        .status(400)
-        .json({ error: "Email is Already Registered", status: 400 });
-    } else {
-      const dateCreate = moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
-      const userData = new users({
-        name,
-        email,
-        mobile,
-        datecreated: dateCreate,
-      });
-
-      await userData.save();
-      res.status(200).json(userData);
-    }
-  } catch (error) {
-    res.status(400).json(error);
-    console.log("catch block error");
   }
 };
 
@@ -83,8 +76,19 @@ exports.deleteProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
   const { id } = req.params;
-  const { name, company, composition, packing } = req.body;
+
+  const {
+    name,
+    company,
+    composition,
+    packing,
+    requireprescription,
+    mrp,
+    price,
+    batch,
+  } = req.body;
   try {
+    const dateUpdate = moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
     const udpateUserData = await products.findByIdAndUpdate(
       { _id: id },
       {
@@ -92,6 +96,11 @@ exports.updateProduct = async (req, res) => {
         company,
         composition,
         packing,
+        requireprescription,
+        mrp,
+        price,
+        batch,
+        dateUpdated: dateUpdate,
       },
       { new: true }
     );
@@ -100,5 +109,56 @@ exports.updateProduct = async (req, res) => {
   } catch (error) {
     res.status(400).json(error);
     console.log("catch block error");
+  }
+};
+
+exports.addBatchToProduct = async (req, res) => {
+  const { productId } = req.params;
+  const { batchNumber, quantity } = req.body;
+
+  try {
+    const product = await products.findById(productId);
+
+    // Create a new batch object
+    const newBatch = {
+      batchNumber,
+      quantity,
+    };
+
+    // Push the new batch object to the `batch` array
+    product.batch.push(newBatch);
+
+    // Save the updated product document
+    await product.save();
+
+    res.status(200).json(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error adding batch to product" });
+  }
+};
+
+exports.updateBatchInProduct = async (req, res) => {
+  const { productId } = req.params;
+  const { batchId } = req.params;
+  const { batchNumber, quantity } = req.body;
+
+  try {
+    const product = await products.findById(productId);
+
+    // Find the batch within the product
+    const batch = product.batch.id(batchId);
+
+    // Update the batch properties
+    batch.batchNumber = batchNumber;
+    batch.quantity = quantity;
+
+    // Save the updated product document
+    await product.save();
+
+    res.status(200).json(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error updating batch in product" });
   }
 };
