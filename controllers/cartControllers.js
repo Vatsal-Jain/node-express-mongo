@@ -6,11 +6,13 @@ exports.getCart = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const cart = await cart.findOne({ user: userId }).populate("items.product");
+    const cart = await Cart.findOne({ user: userId });
     res.status(200).json(cart);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error retrieving cart" });
+    res.status(500).json({
+      error: "Error retrieving cart,maybe there is no element in cart",
+    });
   }
 };
 
